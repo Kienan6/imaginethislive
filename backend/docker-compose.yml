@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5435:5432'
+    volumes:
+      - ./db/migrations/001_migration.sql:/docker-entrypoint-initdb.d/001_migration.sql
+volumes:
+  db:
+    driver: local

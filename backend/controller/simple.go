@@ -13,6 +13,7 @@ type SimpleRoutesController interface {
 
 type SimpleRoutesControllerImpl struct {
 	SimpleService service.SimpleService
+	UserService   service.UserService
 }
 
 type SimpleRoutesParams struct {
