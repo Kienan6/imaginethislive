@@ -11,7 +11,6 @@ func AsInterceptor(f any) any {
 
 func Index() fx.Option {
 	return fx.Module("itl.interceptor",
-		fx.Provide(AsInterceptor(NewSimpleMiddleware)),
 		fx.Provide(AsInterceptor(NewUserMiddleware)),
 	)
 }

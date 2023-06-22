@@ -12,6 +12,7 @@ type GroupService interface {
 	GetGroup(id uuid.UUID) (*model.Group, error)
 	FindByOwner(id uuid.UUID) (*[]model.Group, error)
 	GetUsers(id uuid.UUID) (*[]model.User, error)
+	GetPosts(id uuid.UUID) (*[]model.Post, error)
 }
 
 type GroupServiceImpl struct {
@@ -20,6 +21,10 @@ type GroupServiceImpl struct {
 
 func (s *GroupServiceImpl) GetUsers(id uuid.UUID) (*[]model.User, error) {
 	return s.GroupRepository.FindUsers(id)
+}
+
+func (s *GroupServiceImpl) GetPosts(id uuid.UUID) (*[]model.Post, error) {
+	return s.GroupRepository.FindPosts(id)
 }
 
 func (s *GroupServiceImpl) FindByOwner(id uuid.UUID) (*[]model.Group, error) {

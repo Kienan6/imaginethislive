@@ -4,7 +4,10 @@ import "go.uber.org/fx"
 
 func Index() fx.Option {
 	return fx.Module("itl.repository",
-		fx.Provide(NewUserRepository),
-		fx.Provide(NewGroupRepository),
+		fx.Provide(
+			NewUserRepository,
+			NewPostRepository,
+			NewGroupRepository,
+		),
 	)
 }

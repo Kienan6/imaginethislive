@@ -10,6 +10,7 @@ type Group struct {
 	OwnerID   uuid.UUID
 	Name      string
 	Users     []*User `gorm:"many2many:user_group;"`
+	Posts     []Post
 	CreatedAt pgtype.Timestamp
 	Owner     User
 }

@@ -15,6 +15,7 @@ type GroupRoutesController interface {
 	getGroup(c *gin.Context)
 	getOwnedGroups(c *gin.Context)
 	getUsers(c *gin.Context)
+	getPosts(c *gin.Context)
 }
 
 type GroupRoutesControllerImpl struct {
@@ -102,6 +103,23 @@ func (controller *GroupRoutesControllerImpl) getUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, groups)
 }
 
+func (controller *GroupRoutesControllerImpl) getPosts(c *gin.Context) {
+	id := c.Param("id")
+	idParsed, err := uuid.Parse(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	posts, err := controller.GroupService.GetPosts(idParsed)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, posts)
+}
+
 // NewGroupRoutesController
 // Setup Group controller
 func NewGroupRoutesController(params GroupRoutesParams) Controller {
@@ -114,6 +132,7 @@ func NewGroupRoutesController(params GroupRoutesParams) Controller {
 			group := rg.Group("/group")
 			group.POST("/create", controller.createGroup)
 			group.GET("/:id/users", controller.getUsers)
+			group.GET("/:id/posts", controller.getPosts)
 			group.GET("/:id", controller.getGroup)
 			group.GET("/groups", controller.getOwnedGroups)
 			return group

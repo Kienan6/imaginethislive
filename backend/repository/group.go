@@ -12,6 +12,7 @@ type GroupRepository interface {
 	CrudRepository[model.Group]
 	FindByOwnership(ownerId uuid.UUID) (*[]model.Group, error)
 	FindUsers(id uuid.UUID) (*[]model.User, error)
+	FindPosts(id uuid.UUID) (*[]model.Post, error)
 }
 
 type GroupRepositoryImpl struct {
@@ -50,6 +51,13 @@ func (u *GroupRepositoryImpl) FindByOwnership(ownerId uuid.UUID) (*[]model.Group
 	tx := u.db.Preload("Owner").Session(&gorm.Session{})
 	res := tx.Find(&groups, "owner_id = ?", ownerId.String())
 	return &groups, res.Error
+}
+
+func (u *GroupRepositoryImpl) FindPosts(id uuid.UUID) (*[]model.Post, error) {
+	var posts []model.Post
+	tx := u.db.Session(&gorm.Session{})
+	err := tx.Model(&model.Group{ID: id}).Preload("User").Association("Posts").Find(&posts)
+	return &posts, err
 }
 
 func (u *GroupRepositoryImpl) FindUsers(id uuid.UUID) (*[]model.User, error) {
