@@ -16,4 +16,5 @@ type Post struct {
 	Downvotes   int
 	CreatedAt   pgtype.Timestamp
 	User        User
+	Comments    []Comment
 }

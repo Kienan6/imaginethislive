@@ -43,9 +43,11 @@ CREATE TABLE posts(
 CREATE TABLE comments(
     id uuid DEFAULT uuid_generate_v4(),
     user_id uuid NOT NULL,
+    post_id uuid NOT NULL,
     text text NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users
+    FOREIGN KEY (user_id) REFERENCES users,
+    FOREIGN KEY (post_id) REFERENCES posts
 );
 
 CREATE TABLE post_comment(

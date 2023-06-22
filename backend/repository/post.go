@@ -27,9 +27,10 @@ func (u *PostRepositoryImpl) Create(Post *model.Post) error {
 }
 
 func (u *PostRepositoryImpl) Get(id uuid.UUID) (*model.Post, error) {
-	var Post model.Post
-	res := u.db.Where("id = ?", id.String()).First(&Post)
-	return &Post, res.Error
+	var post model.Post
+	tx := u.db.Model(&model.Post{ID: id}).Preload("Comments")
+	res := tx.First(&post)
+	return &post, res.Error
 }
 
 func (u *PostRepositoryImpl) Update(Post *model.Post) error {
