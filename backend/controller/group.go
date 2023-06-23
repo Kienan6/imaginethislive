@@ -39,16 +39,16 @@ func (controller *GroupRoutesControllerImpl) createGroup(c *gin.Context) {
 			return
 		}
 		group.OwnerID = owner
-		err = controller.GroupService.CreateGroup(&group)
+		groupResp, err := controller.GroupService.CreateGroup(&group)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": err.Error(),
 			})
 			return
 		}
+		c.JSON(http.StatusOK, groupResp)
 	}
 
-	c.JSON(http.StatusOK, group)
 }
 
 func (controller *GroupRoutesControllerImpl) getGroup(c *gin.Context) {
@@ -93,14 +93,14 @@ func (controller *GroupRoutesControllerImpl) getUsers(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
-	groups, err := controller.GroupService.GetUsers(idParsed)
+	users, err := controller.GroupService.GetUsers(idParsed)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
 		return
 	}
-	c.JSON(http.StatusOK, groups)
+	c.JSON(http.StatusOK, users)
 }
 
 func (controller *GroupRoutesControllerImpl) getPosts(c *gin.Context) {

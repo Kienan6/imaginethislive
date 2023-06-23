@@ -8,7 +8,7 @@ import (
 )
 
 type PostService interface {
-	CreatePost(Post *model.Post) error
+	CreatePost(Post *model.Post) (*model.Post, error)
 	GetPost(id uuid.UUID) (*model.Post, error)
 }
 
@@ -25,8 +25,8 @@ func (s *PostServiceImpl) GetPost(id uuid.UUID) (*model.Post, error) {
 	return s.PostRepository.Get(id)
 }
 
-func (s *PostServiceImpl) CreatePost(Post *model.Post) error {
-	return s.PostRepository.Create(Post)
+func (s *PostServiceImpl) CreatePost(post *model.Post) (*model.Post, error) {
+	return s.PostRepository.Create(post)
 }
 
 func NewPostService(params PostServiceParams) PostService {

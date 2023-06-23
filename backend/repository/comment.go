@@ -21,9 +21,9 @@ type CommentRepositoryParams struct {
 	Db *db.PostgresConnection
 }
 
-func (u *CommentRepositoryImpl) Create(Comment *model.Comment) error {
-	res := u.db.Save(Comment)
-	return res.Error
+func (u *CommentRepositoryImpl) Create(comment *model.Comment) (*model.Comment, error) {
+	res := u.db.Save(comment)
+	return comment, res.Error
 }
 
 func (u *CommentRepositoryImpl) Get(id uuid.UUID) (*model.Comment, error) {
@@ -33,8 +33,8 @@ func (u *CommentRepositoryImpl) Get(id uuid.UUID) (*model.Comment, error) {
 	return &comment, res.Error
 }
 
-func (u *CommentRepositoryImpl) Update(Comment *model.Comment) error {
-	res := u.db.Update(Comment.ID.String(), Comment)
+func (u *CommentRepositoryImpl) Update(comment *model.Comment) error {
+	res := u.db.Update(comment.ID.String(), comment)
 	return res.Error
 }
 

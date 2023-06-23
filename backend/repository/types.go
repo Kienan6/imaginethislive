@@ -3,8 +3,8 @@ package repository
 import "github.com/google/uuid"
 
 type CrudRepository[T any] interface {
-	Create(user *T) error
-	Get(id uuid.UUID) (*T, error)
-	Update(user *T) error
-	Delete(id uuid.UUID) error
+	Create(*T) (*T, error)
+	Get(uuid.UUID) (*T, error)
+	Update(*T) error
+	Delete(uuid.UUID) error
 }

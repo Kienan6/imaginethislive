@@ -8,8 +8,9 @@ import (
 )
 
 type UserService interface {
-	CreateUser(user *model.User) error
-	GetGroups(id uuid.UUID) (*[]model.Group, error)
+	CreateUser(*model.User) (*model.User, error)
+	GetGroups(uuid.UUID) (*[]model.Group, error)
+	AddToGroup(uuid.UUID, uuid.UUID) error
 }
 
 type UserServiceImpl struct {
@@ -25,8 +26,12 @@ func (s *UserServiceImpl) GetGroups(id uuid.UUID) (*[]model.Group, error) {
 	return s.userRepository.FindGroups(id)
 }
 
-func (s *UserServiceImpl) CreateUser(user *model.User) error {
+func (s *UserServiceImpl) CreateUser(user *model.User) (*model.User, error) {
 	return s.userRepository.Create(user)
+}
+
+func (s *UserServiceImpl) AddToGroup(u uuid.UUID, u2 uuid.UUID) error {
+	return s.userRepository.AddToGroup(u, u2)
 }
 
 func NewUserService(params UserServiceParams) UserService {

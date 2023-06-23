@@ -6,9 +6,7 @@ import (
 	"go.uber.org/fx"
 	"itl/config"
 	serverfx "itl/fx"
-	"itl/runner"
 	"log"
-	"time"
 )
 
 func NewClient() *resty.Client {
@@ -16,15 +14,15 @@ func NewClient() *resty.Client {
 	return resty.New().SetBaseURL("http://" + config.Address + ":" + config.Port)
 }
 
-func NewSession() {
+func NewSession(options ...interface{}) {
+
 	app := fx.New(
 		serverfx.Index(false),
-		fx.Invoke(func(server *runner.HttpServer) {}),
+		fx.Populate(options...),
 	)
 
-	startCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancel()
-	if err := app.Start(startCtx); err != nil {
+	if err := app.Start(context.Background()); err != nil {
 		log.Fatalln("bad")
 	}
+	defer app.Stop(context.Background())
 }

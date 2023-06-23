@@ -8,7 +8,7 @@ import (
 )
 
 type GroupService interface {
-	CreateGroup(Group *model.Group) error
+	CreateGroup(Group *model.Group) (*model.Group, error)
 	GetGroup(id uuid.UUID) (*model.Group, error)
 	FindByOwner(id uuid.UUID) (*[]model.Group, error)
 	GetUsers(id uuid.UUID) (*[]model.User, error)
@@ -41,8 +41,8 @@ type GroupServiceParams struct {
 	GroupRepository repository.GroupRepository
 }
 
-func (s *GroupServiceImpl) CreateGroup(Group *model.Group) error {
-	return s.GroupRepository.Create(Group)
+func (s *GroupServiceImpl) CreateGroup(group *model.Group) (*model.Group, error) {
+	return s.GroupRepository.Create(group)
 }
 
 func NewGroupService(params GroupServiceParams) GroupService {

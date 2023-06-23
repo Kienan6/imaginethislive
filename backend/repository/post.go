@@ -21,9 +21,9 @@ type PostRepositoryParams struct {
 	Db *db.PostgresConnection
 }
 
-func (u *PostRepositoryImpl) Create(Post *model.Post) error {
-	res := u.db.Save(Post)
-	return res.Error
+func (u *PostRepositoryImpl) Create(post *model.Post) (*model.Post, error) {
+	res := u.db.Save(post)
+	return post, res.Error
 }
 
 func (u *PostRepositoryImpl) Get(id uuid.UUID) (*model.Post, error) {
@@ -33,8 +33,8 @@ func (u *PostRepositoryImpl) Get(id uuid.UUID) (*model.Post, error) {
 	return &post, res.Error
 }
 
-func (u *PostRepositoryImpl) Update(Post *model.Post) error {
-	res := u.db.Update(Post.ID.String(), Post)
+func (u *PostRepositoryImpl) Update(post *model.Post) error {
+	res := u.db.Update(post.ID.String(), post)
 	return res.Error
 }
 

@@ -25,9 +25,9 @@ type PostRoutesParams struct {
 }
 
 func (controller *PostRoutesControllerImpl) createPost(c *gin.Context) {
-	var Post model.Post
+	var post model.Post
 
-	if c.ShouldBind(&Post) == nil {
+	if c.ShouldBind(&post) == nil {
 		owner, err := util.GetUserFromContext(c)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -35,17 +35,17 @@ func (controller *PostRoutesControllerImpl) createPost(c *gin.Context) {
 			})
 			return
 		}
-		Post.UserID = owner
-		err = controller.PostService.CreatePost(&Post)
+		post.UserID = owner
+		postResp, err := controller.PostService.CreatePost(&post)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": err.Error(),
 			})
 			return
 		}
+		c.JSON(http.StatusOK, postResp)
 	}
 
-	c.JSON(http.StatusOK, Post)
 }
 
 func (controller *PostRoutesControllerImpl) getPost(c *gin.Context) {

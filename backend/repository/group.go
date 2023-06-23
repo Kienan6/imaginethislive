@@ -24,9 +24,9 @@ type GroupRepositoryParams struct {
 	Db *db.PostgresConnection
 }
 
-func (u *GroupRepositoryImpl) Create(Group *model.Group) error {
-	res := u.db.Save(Group)
-	return res.Error
+func (u *GroupRepositoryImpl) Create(group *model.Group) (*model.Group, error) {
+	res := u.db.Save(group)
+	return group, res.Error
 }
 
 func (u *GroupRepositoryImpl) Get(id uuid.UUID) (*model.Group, error) {
@@ -36,8 +36,8 @@ func (u *GroupRepositoryImpl) Get(id uuid.UUID) (*model.Group, error) {
 	return &group, res.Error
 }
 
-func (u *GroupRepositoryImpl) Update(Group *model.Group) error {
-	res := u.db.Update(Group.ID.String(), Group)
+func (u *GroupRepositoryImpl) Update(group *model.Group) error {
+	res := u.db.Update(group.ID.String(), group)
 	return res.Error
 }
 

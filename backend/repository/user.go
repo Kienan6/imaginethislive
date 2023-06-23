@@ -11,6 +11,7 @@ import (
 type UserRepository interface {
 	CrudRepository[model.User]
 	FindGroups(id uuid.UUID) (*[]model.Group, error)
+	AddToGroup(id uuid.UUID, groupId uuid.UUID) error
 }
 
 type UserRepositoryImpl struct {
@@ -29,9 +30,9 @@ type UserRepositoryParams struct {
 	Db *db.PostgresConnection
 }
 
-func (u *UserRepositoryImpl) Create(user *model.User) error {
+func (u *UserRepositoryImpl) Create(user *model.User) (*model.User, error) {
 	res := u.db.Save(user)
-	return res.Error
+	return user, res.Error
 }
 
 func (u *UserRepositoryImpl) Get(id uuid.UUID) (*model.User, error) {
@@ -48,6 +49,11 @@ func (u *UserRepositoryImpl) Update(user *model.User) error {
 func (u *UserRepositoryImpl) Delete(id uuid.UUID) error {
 	res := u.db.Table("users").Delete(id.String())
 	return res.Error
+}
+
+func (u *UserRepositoryImpl) AddToGroup(id uuid.UUID, groupId uuid.UUID) error {
+	res := u.db.Model(&model.User{ID: id}).Association("Groups").Append(&model.Group{ID: groupId})
+	return res
 }
 
 func NewUserRepository(params UserRepositoryParams) UserRepository {
