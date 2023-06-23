@@ -49,11 +49,3 @@ CREATE TABLE comments(
     FOREIGN KEY (user_id) REFERENCES users,
     FOREIGN KEY (post_id) REFERENCES posts
 );
-
-CREATE TABLE post_comment(
-    post_id uuid NOT NULL,
-    comment_id uuid NOT NULL,
-    PRIMARY KEY (post_id, comment_id),
-    FOREIGN KEY (post_id) REFERENCES posts,
-    FOREIGN KEY (comment_id) REFERENCES comments
-);

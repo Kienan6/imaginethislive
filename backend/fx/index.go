@@ -12,7 +12,7 @@ import (
 	"itl/service"
 )
 
-func Index() fx.Option {
+func Index(testing bool) fx.Option {
 
 	options := []fx.Option{
 		fx.Provide(config.NewHttpServerConfig),
@@ -23,7 +23,10 @@ func Index() fx.Option {
 		service.Index(),
 		controller.Index(),
 		fx.Provide(gin.NewEngine),
-		runner.Index(),
+	}
+
+	if !testing {
+		options = append(options, runner.Index())
 	}
 
 	return fx.Module("itl", options...)

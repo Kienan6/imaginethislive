@@ -7,6 +7,6 @@ import (
 
 func main() {
 	fx.New(
-		serverfx.Index(),
+		serverfx.Index(false),
 	).Run()
 }

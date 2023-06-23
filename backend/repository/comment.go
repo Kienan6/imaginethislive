@@ -28,7 +28,7 @@ func (u *CommentRepositoryImpl) Create(Comment *model.Comment) error {
 
 func (u *CommentRepositoryImpl) Get(id uuid.UUID) (*model.Comment, error) {
 	var comment model.Comment
-	tx := u.db.Model(&model.Comment{ID: id}).Preload("Comments")
+	tx := u.db.Model(&model.Comment{ID: id}).Preload("User").Preload("Post")
 	res := tx.First(&comment)
 	return &comment, res.Error
 }

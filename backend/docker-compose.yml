@@ -10,6 +10,7 @@ services:
       - '5435:5432'
     volumes:
       - ./db/migrations/001_migration.sql:/docker-entrypoint-initdb.d/001_migration.sql
+      - ./db/migrations/002_testdata.sql:/docker-entrypoint-initdb.d/002_testdata.sql
 volumes:
   db:
     driver: local
