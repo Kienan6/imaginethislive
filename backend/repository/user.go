@@ -5,12 +5,12 @@ import (
 	"go.uber.org/fx"
 	"gorm.io/gorm"
 	"itl/db"
-	"itl/model"
+	"itl/model/domain"
 )
 
 type UserRepository interface {
-	CrudRepository[model.User]
-	FindGroups(id uuid.UUID) (*[]model.Group, error)
+	CrudRepository[domain.User]
+	FindGroups(id uuid.UUID) (*[]domain.Group, error)
 	AddToGroup(id uuid.UUID, groupId uuid.UUID) error
 }
 
@@ -18,30 +18,30 @@ type UserRepositoryImpl struct {
 	db *gorm.DB
 }
 
-func (u *UserRepositoryImpl) FindGroups(id uuid.UUID) (*[]model.Group, error) {
-	var groups []model.Group
-	tx := u.db.Session(&gorm.Session{})
-	err := tx.Model(&model.User{ID: id}).Association("Groups").Find(&groups)
-	return &groups, err
-}
-
 type UserRepositoryParams struct {
 	fx.In
 	Db *db.PostgresConnection
 }
 
-func (u *UserRepositoryImpl) Create(user *model.User) (*model.User, error) {
+func (u *UserRepositoryImpl) FindGroups(id uuid.UUID) (*[]domain.Group, error) {
+	var groups []domain.Group
+	tx := u.db.Session(&gorm.Session{})
+	err := tx.Model(&domain.User{ID: id}).Association("Groups").Find(&groups)
+	return &groups, err
+}
+
+func (u *UserRepositoryImpl) Create(user *domain.User) (*domain.User, error) {
 	res := u.db.Save(user)
 	return user, res.Error
 }
 
-func (u *UserRepositoryImpl) Get(id uuid.UUID) (*model.User, error) {
-	var user model.User
+func (u *UserRepositoryImpl) Get(id uuid.UUID) (*domain.User, error) {
+	var user domain.User
 	res := u.db.Where("id = ?", id.String()).First(&user)
 	return &user, res.Error
 }
 
-func (u *UserRepositoryImpl) Update(user *model.User) error {
+func (u *UserRepositoryImpl) Update(user *domain.User) error {
 	res := u.db.Update(user.ID.String(), user)
 	return res.Error
 }
@@ -52,7 +52,7 @@ func (u *UserRepositoryImpl) Delete(id uuid.UUID) error {
 }
 
 func (u *UserRepositoryImpl) AddToGroup(id uuid.UUID, groupId uuid.UUID) error {
-	res := u.db.Model(&model.User{ID: id}).Association("Groups").Append(&model.Group{ID: groupId})
+	res := u.db.Model(&domain.User{ID: id}).Association("Groups").Append(&domain.Group{ID: groupId})
 	return res
 }
 

@@ -4,7 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"itl/e2e/fixtures"
-	"itl/model"
+	"itl/model/domain"
 	"testing"
 )
 
@@ -18,17 +18,17 @@ func TestUser(t *testing.T) {
 		"all": {
 			act: func(t *testing.T) {
 				client := fixtures.NewClient()
-				user := model.User{
+				user := domain.User{
 					Username: uuid.New().String(),
 				}
-				userResp := &model.User{}
+				userResp := &domain.User{}
 				resp, err := client.R().SetBody(&user).SetResult(userResp).Post("/v1/user/create")
 				assert.Nil(t, err)
 				assert.Equal(t, 200, resp.StatusCode())
 				assert.NotEmpty(t, resp.Body())
 				assert.Equal(t, user.Username, userResp.Username)
 
-				group := &model.Group{
+				group := &domain.Group{
 					OwnerID: userResp.ID,
 					Name:    uuid.New().String(),
 				}
@@ -37,7 +37,7 @@ func TestUser(t *testing.T) {
 				assert.Nil(t, err)
 				assert.Equal(t, 200, resp.StatusCode())
 
-				var groupResp []model.Group
+				var groupResp []domain.Group
 				resp, err = client.R().SetResult(&groupResp).SetHeader("Authorization", userResp.ID.String()).Get("/v1/user/groups")
 				assert.Nil(t, err)
 				assert.Equal(t, 200, resp.StatusCode())

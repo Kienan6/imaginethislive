@@ -5,11 +5,11 @@ import (
 	"go.uber.org/fx"
 	"gorm.io/gorm"
 	"itl/db"
-	"itl/model"
+	"itl/model/domain"
 )
 
 type CommentRepository interface {
-	CrudRepository[model.Comment]
+	CrudRepository[domain.Comment]
 }
 
 type CommentRepositoryImpl struct {
@@ -21,19 +21,19 @@ type CommentRepositoryParams struct {
 	Db *db.PostgresConnection
 }
 
-func (u *CommentRepositoryImpl) Create(comment *model.Comment) (*model.Comment, error) {
+func (u *CommentRepositoryImpl) Create(comment *domain.Comment) (*domain.Comment, error) {
 	res := u.db.Save(comment)
 	return comment, res.Error
 }
 
-func (u *CommentRepositoryImpl) Get(id uuid.UUID) (*model.Comment, error) {
-	var comment model.Comment
-	tx := u.db.Model(&model.Comment{ID: id}).Preload("User").Preload("Post")
+func (u *CommentRepositoryImpl) Get(id uuid.UUID) (*domain.Comment, error) {
+	var comment domain.Comment
+	tx := u.db.Model(&domain.Comment{ID: id}).Preload("User").Preload("Post")
 	res := tx.First(&comment)
 	return &comment, res.Error
 }
 
-func (u *CommentRepositoryImpl) Update(comment *model.Comment) error {
+func (u *CommentRepositoryImpl) Update(comment *domain.Comment) error {
 	res := u.db.Update(comment.ID.String(), comment)
 	return res.Error
 }

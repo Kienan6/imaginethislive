@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
+	"log"
 	"os"
 )
 
@@ -16,6 +18,10 @@ type PostgresConfig struct {
 }
 
 func NewPostgresConfig() *PostgresConfig {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	address := os.Getenv(PostgresAddressKey)
 	port := os.Getenv(PostgresPortKey)
 	name := os.Getenv(PostgresDbName)

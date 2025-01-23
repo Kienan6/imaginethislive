@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"go.uber.org/fx"
-	"itl/model"
+	"itl/model/domain"
 	"itl/service"
 	"itl/util"
 	"net/http"
@@ -27,23 +27,29 @@ type GroupRoutesParams struct {
 	GroupService service.GroupService
 }
 
+// createGroup creates a group
+//
+//	@Summary      Create a Group
+//	@Description  create a group
+//	@Tags		  group
+//	@Accept       json
+//	@Produce      json
+//	@Param        group    body     model.Group  true "Group Object"
+//	@Success      200  {object}   model.Group
+//	@Failure      400  {object}	  map[string]any
+//	@Security BasicAuth
+//	@Router       /group/create [post]
 func (controller *GroupRoutesControllerImpl) createGroup(c *gin.Context) {
-	var group model.Group
+	var group domain.Group
 
 	if c.ShouldBind(&group) == nil {
 		owner, err := util.GetUserFromContext(c)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "user required",
-			})
+		if handleError(c, err) {
 			return
 		}
 		group.OwnerID = owner
 		groupResp, err := controller.GroupService.CreateGroup(&group)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": err.Error(),
-			})
+		if handleError(c, err) {
 			return
 		}
 		c.JSON(http.StatusOK, groupResp)
@@ -51,18 +57,26 @@ func (controller *GroupRoutesControllerImpl) createGroup(c *gin.Context) {
 
 }
 
+// getGroup gets a group
+//
+//	@Summary      Create a Group
+//	@Description  create a group
+//	@Tags		  group
+//	@Accept       json
+//	@Produce      json
+//	@Param        id    path     string  true "Group ID"
+//	@Success      200  {object}   model.Group
+//	@Failure      400  {object}	  map[string]any
+//	@Security BasicAuth
+//	@Router       /group/{id} [get]
 func (controller *GroupRoutesControllerImpl) getGroup(c *gin.Context) {
 	id := c.Param("id")
 	idParsed, err := uuid.Parse(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{})
+	if handleError(c, err) {
 		return
 	}
 	group, err := controller.GroupService.GetGroup(idParsed)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
+	if handleError(c, err) {
 		return
 	}
 	c.JSON(http.StatusOK, group)
@@ -70,17 +84,11 @@ func (controller *GroupRoutesControllerImpl) getGroup(c *gin.Context) {
 
 func (controller *GroupRoutesControllerImpl) getOwnedGroups(c *gin.Context) {
 	owner, err := util.GetUserFromContext(c)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "user required",
-		})
+	if handleError(c, err) {
 		return
 	}
 	groups, err := controller.GroupService.FindByOwner(owner)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
+	if handleError(c, err) {
 		return
 	}
 	c.JSON(http.StatusOK, groups)
@@ -89,15 +97,11 @@ func (controller *GroupRoutesControllerImpl) getOwnedGroups(c *gin.Context) {
 func (controller *GroupRoutesControllerImpl) getUsers(c *gin.Context) {
 	id := c.Param("id")
 	idParsed, err := uuid.Parse(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{})
+	if handleError(c, err) {
 		return
 	}
 	users, err := controller.GroupService.GetUsers(idParsed)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
+	if handleError(c, err) {
 		return
 	}
 	c.JSON(http.StatusOK, users)
@@ -106,22 +110,16 @@ func (controller *GroupRoutesControllerImpl) getUsers(c *gin.Context) {
 func (controller *GroupRoutesControllerImpl) getPosts(c *gin.Context) {
 	id := c.Param("id")
 	idParsed, err := uuid.Parse(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{})
+	if handleError(c, err) {
 		return
 	}
 	posts, err := controller.GroupService.GetPosts(idParsed)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
+	if handleError(c, err) {
 		return
 	}
 	c.JSON(http.StatusOK, posts)
 }
 
-// NewGroupRoutesController
-// Setup Group controller
 func NewGroupRoutesController(params GroupRoutesParams) Controller {
 
 	controller := &GroupRoutesControllerImpl{

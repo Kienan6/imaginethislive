@@ -1,8 +1,8 @@
-package model
+package domain
 
 import (
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 type Post struct {
@@ -14,7 +14,7 @@ type Post struct {
 	Plays       int
 	Upvotes     int
 	Downvotes   int
-	CreatedAt   pgtype.Timestamp
+	CreatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
 	User        User
 	Comments    []Comment
 }

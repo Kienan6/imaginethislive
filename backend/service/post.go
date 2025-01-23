@@ -3,13 +3,13 @@ package service
 import (
 	"github.com/google/uuid"
 	"go.uber.org/fx"
-	"itl/model"
+	repository2 "itl/model/domain"
 	"itl/repository"
 )
 
 type PostService interface {
-	CreatePost(Post *model.Post) (*model.Post, error)
-	GetPost(id uuid.UUID) (*model.Post, error)
+	CreatePost(Post *repository2.Post) (*repository2.Post, error)
+	GetPost(id uuid.UUID) (*repository2.Post, error)
 }
 
 type PostServiceParams struct {
@@ -21,11 +21,11 @@ type PostServiceImpl struct {
 	PostRepository repository.PostRepository
 }
 
-func (s *PostServiceImpl) GetPost(id uuid.UUID) (*model.Post, error) {
+func (s *PostServiceImpl) GetPost(id uuid.UUID) (*repository2.Post, error) {
 	return s.PostRepository.Get(id)
 }
 
-func (s *PostServiceImpl) CreatePost(post *model.Post) (*model.Post, error) {
+func (s *PostServiceImpl) CreatePost(post *repository2.Post) (*repository2.Post, error) {
 	return s.PostRepository.Create(post)
 }
 

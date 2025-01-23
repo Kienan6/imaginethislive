@@ -1,8 +1,8 @@
-package model
+package domain
 
 import (
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 type Group struct {
@@ -11,6 +11,6 @@ type Group struct {
 	Name      string
 	Users     []*User `gorm:"many2many:user_group;"`
 	Posts     []Post
-	CreatedAt pgtype.Timestamp
+	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
 	Owner     User
 }
