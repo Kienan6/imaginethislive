@@ -2,11 +2,12 @@ with import <nixpkgs> {};
 
 stdenv.mkDerivation {
 
-  name = "authapi-server";
+  name = "itl-backend";
 
   buildInputs = with pkgs; [
     gnumake
-    go_1_19
+    go_1_23
+    postgresql_14
   ];
 
   shellHook = ''

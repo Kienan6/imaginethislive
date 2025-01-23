@@ -3,13 +3,13 @@ package service
 import (
 	"github.com/google/uuid"
 	"go.uber.org/fx"
-	"itl/model"
+	repository2 "itl/model/domain"
 	"itl/repository"
 )
 
 type UserService interface {
-	CreateUser(*model.User) (*model.User, error)
-	GetGroups(uuid.UUID) (*[]model.Group, error)
+	CreateUser(*repository2.User) (*repository2.User, error)
+	GetGroups(uuid.UUID) (*[]repository2.Group, error)
 	AddToGroup(uuid.UUID, uuid.UUID) error
 }
 
@@ -22,11 +22,11 @@ type UserServiceParams struct {
 	UserRepository repository.UserRepository
 }
 
-func (s *UserServiceImpl) GetGroups(id uuid.UUID) (*[]model.Group, error) {
+func (s *UserServiceImpl) GetGroups(id uuid.UUID) (*[]repository2.Group, error) {
 	return s.userRepository.FindGroups(id)
 }
 
-func (s *UserServiceImpl) CreateUser(user *model.User) (*model.User, error) {
+func (s *UserServiceImpl) CreateUser(user *repository2.User) (*repository2.User, error) {
 	return s.userRepository.Create(user)
 }
 

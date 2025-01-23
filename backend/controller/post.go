@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"go.uber.org/fx"
-	"itl/model"
+	"itl/model/domain"
 	"itl/service"
 	"itl/util"
 	"net/http"
@@ -25,7 +25,7 @@ type PostRoutesParams struct {
 }
 
 func (controller *PostRoutesControllerImpl) createPost(c *gin.Context) {
-	var post model.Post
+	var post domain.Post
 
 	if c.ShouldBind(&post) == nil {
 		owner, err := util.GetUserFromContext(c)

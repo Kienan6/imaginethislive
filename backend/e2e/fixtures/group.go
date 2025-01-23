@@ -3,14 +3,14 @@ package fixtures
 import (
 	"github.com/google/uuid"
 	"go.uber.org/fx"
-	"itl/model"
+	repository2 "itl/model/domain"
 	"itl/repository"
 	"log"
 )
 
 type GroupFixture interface {
-	GetDefaultUser(user *model.User) *model.User
-	CreatePostInGroup(post *model.Post) *model.Post
+	GetDefaultUser(user *repository2.User) *repository2.User
+	CreatePostInGroup(post *repository2.Post) *repository2.Post
 	AddUserToGroup(userId uuid.UUID, groupId uuid.UUID)
 }
 
@@ -34,7 +34,7 @@ func (g *GroupFixtureImpl) AddUserToGroup(userId uuid.UUID, groupId uuid.UUID) {
 	}
 }
 
-func (g *GroupFixtureImpl) CreatePostInGroup(post *model.Post) *model.Post {
+func (g *GroupFixtureImpl) CreatePostInGroup(post *repository2.Post) *repository2.Post {
 	resp, err := g.postRepository.Create(post)
 	if err != nil {
 		log.Fatal("error creating post")
@@ -42,7 +42,7 @@ func (g *GroupFixtureImpl) CreatePostInGroup(post *model.Post) *model.Post {
 	return resp
 }
 
-func (g *GroupFixtureImpl) GetDefaultUser(user *model.User) *model.User {
+func (g *GroupFixtureImpl) GetDefaultUser(user *repository2.User) *repository2.User {
 	resp, err := g.userRepository.Create(user)
 	if err != nil {
 		log.Fatal("error creating user")

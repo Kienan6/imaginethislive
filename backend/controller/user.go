@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"go.uber.org/fx"
-	"itl/model"
+	"itl/model/domain"
 	"itl/service"
 	"itl/util"
 	"net/http"
@@ -26,7 +26,7 @@ type UserRoutesParams struct {
 }
 
 func (controller *UserRoutesControllerImpl) create(c *gin.Context) {
-	var user model.User
+	var user domain.User
 
 	if c.ShouldBind(&user) == nil {
 		userResp, err := controller.UserService.CreateUser(&user)

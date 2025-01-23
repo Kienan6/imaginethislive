@@ -1,0 +1,148 @@
+basePath: /v1
+definitions:
+  model.Comment:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      post:
+        $ref: '#/definitions/model.Post'
+      postID:
+        type: string
+      text:
+        type: string
+      user:
+        $ref: '#/definitions/model.User'
+      userID:
+        type: string
+    type: object
+  model.Group:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      owner:
+        $ref: '#/definitions/model.User'
+      ownerID:
+        type: string
+      posts:
+        items:
+          $ref: '#/definitions/model.Post'
+        type: array
+      users:
+        items:
+          $ref: '#/definitions/model.User'
+        type: array
+    type: object
+  model.Post:
+    properties:
+      comments:
+        items:
+          $ref: '#/definitions/model.Comment'
+        type: array
+      createdAt:
+        type: string
+      description:
+        type: string
+      downvotes:
+        type: integer
+      groupID:
+        type: string
+      id:
+        type: string
+      plays:
+        type: integer
+      upvotes:
+        type: integer
+      uri:
+        type: string
+      user:
+        $ref: '#/definitions/model.User'
+      userID:
+        type: string
+    type: object
+  model.User:
+    properties:
+      createdAt:
+        type: string
+      groups:
+        items:
+          $ref: '#/definitions/model.Group'
+        type: array
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:9005
+info:
+  contact:
+    name: Kienan O'Brien
+  description: Imagine this live backend applications
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Imagine This Live
+  version: "1.0"
+paths:
+  /group/{id}:
+    get:
+      consumes:
+      - application/json
+      description: create a group
+      parameters:
+      - description: Group ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Group'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a Group
+      tags:
+      - group
+  /group/create:
+    post:
+      consumes:
+      - application/json
+      description: create a group
+      parameters:
+      - description: Group Object
+        in: body
+        name: group
+        required: true
+        schema:
+          $ref: '#/definitions/model.Group'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Group'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a Group
+      tags:
+      - group
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

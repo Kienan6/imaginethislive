@@ -3,14 +3,14 @@ package fixtures
 import (
 	"github.com/google/uuid"
 	"go.uber.org/fx"
-	"itl/model"
+	repository2 "itl/model/domain"
 	"itl/repository"
 	"log"
 )
 
 type UserFixture interface {
-	CreateAndAddUserToGroup(id uuid.UUID, group *model.Group)
-	CreateGroup(group *model.Group) uuid.UUID
+	CreateAndAddUserToGroup(id uuid.UUID, group *repository2.Group)
+	CreateGroup(group *repository2.Group) uuid.UUID
 }
 
 type UserFixtureImpl struct {
@@ -18,7 +18,7 @@ type UserFixtureImpl struct {
 	groupRepository repository.GroupRepository
 }
 
-func (fixture *UserFixtureImpl) CreateGroup(group *model.Group) uuid.UUID {
+func (fixture *UserFixtureImpl) CreateGroup(group *repository2.Group) uuid.UUID {
 	resp, err := fixture.groupRepository.Create(group)
 	if err != nil {
 		log.Fatal("Could not create group")
@@ -32,7 +32,7 @@ type UserFixtureParams struct {
 	GroupRepository repository.GroupRepository
 }
 
-func (fixture *UserFixtureImpl) CreateAndAddUserToGroup(id uuid.UUID, group *model.Group) {
+func (fixture *UserFixtureImpl) CreateAndAddUserToGroup(id uuid.UUID, group *repository2.Group) {
 	resp, err := fixture.groupRepository.Create(group)
 	if err != nil {
 		log.Fatal("Could not create group")

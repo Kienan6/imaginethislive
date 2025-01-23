@@ -4,13 +4,22 @@ services:
     image: postgres:14.1-alpine
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=itl
+      - POSTGRES_PASSWORD=password
     ports:
       - '5435:5432'
     volumes:
       - ./db/migrations/001_migration.sql:/docker-entrypoint-initdb.d/001_migration.sql
       - ./db/migrations/002_testdata.sql:/docker-entrypoint-initdb.d/002_testdata.sql
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    restart: always
+    environment:
+      SWAGGER_JSON: /docs/swagger.json
+    ports:
+      - '9004:8080'
+    volumes:
+      - ./docs:/docs
 volumes:
   db:
     driver: local
